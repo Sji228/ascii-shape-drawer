@@ -17,7 +17,7 @@ private:
     std::vector<std::vector<char>> pixels;
 
 public:
-    ASCIICanvas(int w, int h) : width(w), height(h), pixels(h, std::vector<char>(w, ' ')) {}
+    ASCIICanvas(int w, int h, char background) : width(w), height(h), pixels(h, std::vector<char>(w, background)) {}
 
     void drawPixel(int x, int y, char symbol) override {
         if (x >= 0 && x < width && y >= 0 && y < height) {
@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     configFile >> outputFile;
     configFile >> emptySymbol;
 
-    ASCIICanvas canvas(canvasWidth, canvasHeight);
+    ASCIICanvas canvas(canvasWidth, canvasHeight, emptySymbol);
 
     std::string figureType;
     while (configFile >> figureType) {

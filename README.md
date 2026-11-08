@@ -1,37 +1,51 @@
-KRYKUN SERHII GRUPA 1 04.07.2024
-README
-Opis programu:
-Program rysuje figury na canvasie ASCII zgodnie ze specyfikacją podaną w pliku konfiguracyjnym. Obsługiwane figury to: koło (Circle), prostokąt (Rectangle) oraz kwadrat (Square). Wynik jest zapisywany do pliku tekstowego, gdzie figury są przedstawione za pomocą różnych symboli.
+# ASCII Shape Drawer
 
-Format pliku konfiguracyjnego:
-Plik konfiguracyjny zawiera informacje o wymiarach canvasu, pliku wyjściowym oraz specyfikacji figur do narysowania. Struktura pliku konfiguracyjnego jest następująca:
+A small C++ program that draws circles, rectangles and squares onto an ASCII canvas, based on a plain-text config file. Written as a university assignment (Programming, 2024) to practise classes, inheritance and polymorphism.
 
-    1)Wymiary canvasu: szerokość i wysokość (np. 20 10)
+```
+|====================|
+|....................|
+|...............****.|
+|..@@@@@...#....****.|
+|..@@@@@.#####..****.|
+|..@@@@@.#####..****.|
+|.......#######......|
+|........#####.......|
+|........#####.......|
+|..........#.........|
+|....................|
+|====================|
+```
 
-    2)Nazwa pliku wyjściowego (np. output.txt)
+## Build and run
 
-    3)Symbol oznaczający piksel nienależący do żadnej figury (np. ' ')
+```bash
+g++ -o draw draw.cpp
+./draw config.txt
+```
 
-    4)Lista figur do narysowania, gdzie każda figura jest opisana linią tekstu w formacie:
-        Koło (Circle): Circle x y radius symbol
-            x - współrzędna X środka koła
-            y - współrzędna Y środka koła
-            radius - promień koła
-            symbol - symbol użyty do narysowania koła
-        Prostokąt (Rectangle): Rectangle x y width height symbol
-            x - współrzędna X lewego górnego rogu prostokąta
-            y - współrzędna Y lewego górnego rogu prostokąta
-            width - szerokość prostokąta
-            height - wysokość prostokąta
-            symbol - symbol użyty do narysowania prostokąta
-        Kwadrat (Square): Square x y side symbol
-            x - współrzędna X lewego górnego rogu kwadratu
-            y - współrzędna Y lewego górnego rogu kwadratu
-            side - długość boku kwadratu
-            symbol - symbol użyty do narysowania kwadratu
-            
-Kompilacja i uruchomienie programu:
-Aby skompilować program, użyj kompilatora C++: g++ -o draw draw.cpp
-Program uruchamia się, przekazując plik konfiguracyjny jako argument: ./draw config.txt
+The result is written to the output file named in the config.
 
-Po czym plik wyjściowy zostanie stworzony.
+## Config format
+
+```
+20 10            # canvas width and height
+output.txt       # output file
+.                # background symbol
+Circle 10 5 3 #
+Rectangle 2 2 5 3 @
+Square 15 1 4 *
+```
+
+| Shape | Line format |
+|---|---|
+| Circle | `Circle x y radius symbol` (x, y = centre) |
+| Rectangle | `Rectangle x y width height symbol` (x, y = top-left corner) |
+| Square | `Square x y side symbol` (x, y = top-left corner) |
+
+Shapes are drawn in order, so later ones cover earlier ones. Anything outside the canvas is clipped. The config file itself must not contain comments.
+
+## Design
+
+- `Canvas` is an abstract interface; `ASCIICanvas` stores the pixel grid and renders it with a border.
+- `Figure` is the abstract base for shapes; `Circle` and `Rectangle` implement `draw()`, and `Square` reuses `Rectangle`.
